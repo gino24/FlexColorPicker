@@ -30,55 +30,55 @@ import UIKit
 
 /// View with linear gradient background instead of solid color.
 public class GradientView: UIView {
-    open override class var layerClass: AnyClass {
-        return CAGradientLayer.self
-    }
+	open override class var layerClass: AnyClass {
+		return CAGradientLayer.self
+	}
 
-    var gradientLayer: CAGradientLayer {
-        return layer as! CAGradientLayer
-    }
+	var gradientLayer: CAGradientLayer {
+		return layer as! CAGradientLayer
+	}
 
-    /// Background gradient first color (first stop of the gradient).
-    public var startColor: UIColor = .clear {
-        didSet {
-            updateColors()
-        }
-    }
+	/// Background gradient first color (first stop of the gradient).
+	public var startColor: UIColor = .clear {
+		didSet {
+			updateColors()
+		}
+	}
 
-    /// Background gradient last color (last stop of the gradient).
-    public var endColor: UIColor = .clear {
-        didSet {
-            updateColors()
-        }
-    }
+	/// Background gradient last color (last stop of the gradient).
+	public var endColor: UIColor = .clear {
+		didSet {
+			updateColors()
+		}
+	}
 
-    /// How far to right the begining of background gradient shoulds be from the view's left edge. In points.
-    public var startOffset: CGFloat = 0 {
-        didSet {
-            updatePoints()
-        }
-    }
+	/// How far to right the begining of background gradient shoulds be from the view's left edge. In points.
+	public var startOffset: CGFloat = 0 {
+		didSet {
+			updatePoints()
+		}
+	}
 
-    /// How far to the left the end of background gradient shoulds be from the view's right edge. In points.
-    public var endOffset: CGFloat = 0 {
-        didSet {
-            updatePoints()
-        }
-    }
+	/// How far to the left the end of background gradient shoulds be from the view's right edge. In points.
+	public var endOffset: CGFloat = 0 {
+		didSet {
+			updatePoints()
+		}
+	}
 
-    public override var bounds: CGRect {
-        didSet {
-            updatePoints()
-        }
-    }
+	public override var bounds: CGRect {
+		didSet {
+			updatePoints()
+		}
+	}
 
-    open func updateColors() {
-        gradientLayer.colors = [startColor.cgColor, endColor.cgColor]
-    }
+	open func updateColors() {
+		gradientLayer.colors = [startColor.cgColor, endColor.cgColor]
+	}
 
-    open func updatePoints() {
-        gradientLayer.startPoint = CGPoint(x: startOffset / bounds.width, y: 0.5)
-        gradientLayer.endPoint.x = 1 - endOffset / bounds.width //some strange bug causes it to asign NaN for x when directly assigning CGPoint
-        gradientLayer.endPoint.y = 0.5
-    }
+	open func updatePoints() {
+		gradientLayer.startPoint = CGPoint(x: startOffset / bounds.width, y: 0.5)
+		gradientLayer.endPoint.x = 1 - endOffset / bounds.width //some strange bug causes it to asign NaN for x when directly assigning CGPoint
+		gradientLayer.endPoint.y = 0.5
+	}
 }
