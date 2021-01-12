@@ -1,5 +1,5 @@
 //
-//  GradientView.swift
+//  ColorPickerGradientView.swift
 //  FlexColorPicker
 //
 //  Created by Rastislav Mirek on 28/5/18.
@@ -29,7 +29,7 @@
 import UIKit
 
 /// View with linear gradient background instead of solid color.
-public class GradientView: UIView {
+public class ColorPickerGradientView: UIView {
 	open override class var layerClass: AnyClass {
 		return CAGradientLayer.self
 	}
