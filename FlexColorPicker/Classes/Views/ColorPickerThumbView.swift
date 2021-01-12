@@ -43,127 +43,130 @@ private let percentageTextFont = UIFont.monospacedDigitSystemFont(ofSize: 14, we
 
 @IBDesignable
 open class ColorPickerThumbView: UIViewWithCommonInit {
-    public let borderView: CircleShapedView = LimitedGestureCircleView()
-    public let colorView: CircleShapedView = LimitedGestureCircleView()
-    /// The label with thumb text visible while user is repositioning this thumbView.
-    ///
-    /// Typically used to show slider percentage or other selected value. See also `showPercentage`.
-    public let percentageLabel = UILabel()
-    /// When `true` the border automatically darken when color is too bright to be contrast enought with white border.
-    public var autoDarken: Bool = true
-    /// Whether to show percentage label above the thumb view.
-    public var showPercentage: Bool = true
-    /// Whether the thumb view should be expanded when user is interacting with it.
-    public var expandOnTap: Bool = true
-    var delegate: LimitedGestureViewDelegate? {
-        didSet {
-            (borderView as? LimitedGestureCircleView)?.delegate = delegate
-            (colorView as? LimitedGestureCircleView)?.delegate = delegate
-        }
-    }
+	public let borderView: CircleShapedView = LimitedGestureCircleView()
+	public let colorView: CircleShapedView = LimitedGestureCircleView()
+	/// The label with thumb text visible while user is repositioning this thumbView.
+	///
+	/// Typically used to show slider percentage or other selected value. See also `showPercentage`.
+	public let percentageLabel = UILabel()
+	/// When `true` the border automatically darken when color is too bright to be contrast enought with white border.
+	public var autoDarken: Bool = true
+	/// Whether to show percentage label above the thumb view.
+	public var showPercentage: Bool = true
+	/// Whether the thumb view should be expanded when user is interacting with it.
+	public var expandOnTap: Bool = true
+	var delegate: LimitedGestureViewDelegate? {
+		didSet {
+			(borderView as? LimitedGestureCircleView)?.delegate = delegate
+			(colorView as? LimitedGestureCircleView)?.delegate = delegate
+		}
+	}
 
-    var expandedUpscaleRatio: CGFloat = defaultExpandedUpscaleRatio {
-        didSet {
-            if isExpanded {
-                setExpanded(true, animated: true)
-            }
-        }
-    }
-    private(set) open var color: UIColor = defaultSelectedColor.toUIColor()
+	var expandedUpscaleRatio: CGFloat = defaultExpandedUpscaleRatio {
+		didSet {
+			if isExpanded {
+				setExpanded(true, animated: true)
+			}
+		}
+	}
+	private(set) open var color: UIColor = defaultSelectedColor.toUIColor()
 
-    /// The percentage displayed in `percentageLabel` unless overriden by dirrectly setting `percentageLabel.text` after setting this property.
-    ///
-    /// Note: In `ColorSliderControl`s this typically corresponds to value of the slider but must not correspond to actual text displayed in `thumbLabel` if `ColorSliderControl.thumbLabelFormatter` is set.
-    open var percentage: Int = 0 {
-        didSet {
-            updatePercentage(percentage)
-        }
-    }
+	/// The percentage displayed in `percentageLabel` unless overriden by dirrectly setting `percentageLabel.text` after setting this property.
+	///
+	/// Note: In `ColorSliderControl`s this typically corresponds to value of the slider but must not correspond to actual text displayed in `thumbLabel` if `ColorSliderControl.thumbLabelFormatter` is set.
+	open var percentage: Int = 0 {
+		didSet {
+			updatePercentage(percentage)
+		}
+	}
 
-    public private(set) var isExpanded = false
+	public private(set) var isExpanded = false
 
-    open override var intrinsicContentSize: CGSize {
-        return CGSize(width: colorPickerThumbViewDiameter, height: colorPickerThumbViewDiameter)
-    }
+	open override var intrinsicContentSize: CGSize {
+		return CGSize(width: colorPickerThumbViewDiameter, height: colorPickerThumbViewDiameter)
+	}
 
-    var wideBorderWidth: CGFloat {
-        return defaultWideBorderWidth
-    }
+	var wideBorderWidth: CGFloat {
+		return defaultWideBorderWidth
+	}
 
-    open override func commonInit() {
-        super.commonInit()
-        addAutolayoutFillingSubview(borderView)
-        addAutolayoutFillingSubview(colorView, edgeInsets: UIEdgeInsets(top: wideBorderWidth, left: wideBorderWidth, bottom: wideBorderWidth, right: wideBorderWidth))
-        addAutolayoutCentredView(percentageLabel)
-        borderView.viewBorderColor = UIColor.colorPickerBorderColor
-        borderView.borderWidth = 1 / UIScreen.main.scale
-        percentageLabel.font = percentageTextFont
-        percentageLabel.textColor = UIColor.colorPickerLabelTextColor
-        percentageLabel.textAlignment = .center
-        percentageLabel.alpha = 0
-        clipsToBounds = false // required for the text label to be displayed ourside of bounds
-        borderView.backgroundColor = UIColor.colorPickerThumbViewWideBorderColor
-        (borderView as? LimitedGestureCircleView)?.delegate = delegate
-        (colorView as? LimitedGestureCircleView)?.delegate = delegate
-        setColor(color, animateBorderColor: false)
-    }
+	open override func commonInit() {
+		super.commonInit()
+		addAutolayoutFillingSubview(borderView)
+		addAutolayoutFillingSubview(colorView, edgeInsets: UIEdgeInsets(top: wideBorderWidth, left: wideBorderWidth, bottom: wideBorderWidth, right: wideBorderWidth))
+		addAutolayoutCentredView(percentageLabel)
+		borderView.viewBorderColor = UIColor.colorPickerBorderColor
+		borderView.borderWidth = 1 / UIScreen.main.scale
+		percentageLabel.font = percentageTextFont
+		percentageLabel.textColor = UIColor.colorPickerLabelTextColor
+		percentageLabel.textAlignment = .center
+		percentageLabel.alpha = 0
+		clipsToBounds = false // required for the text label to be displayed ourside of bounds
+		borderView.backgroundColor = UIColor.colorPickerThumbViewWideBorderColor
+		(borderView as? LimitedGestureCircleView)?.delegate = delegate
+		(colorView as? LimitedGestureCircleView)?.delegate = delegate
+		setColor(color, animateBorderColor: false)
+	}
 
-    open func setColor(_ color: UIColor, animateBorderColor: Bool) {
-        self.color = color
-        colorView.backgroundColor = color
-        setDarkBorderIfNeeded(animated: animateBorderColor)
-    }
+	open func setColor(_ color: UIColor, animateBorderColor: Bool) {
+		self.color = color
+		colorView.backgroundColor = color
+		setDarkBorderIfNeeded(animated: animateBorderColor)
+	}
 
-    public func updatePercentage(_ percentage: Int) {
-        percentageLabel.text = String(min(100, max(0, percentage))) + "%"
-    }
+	public func updatePercentage(_ percentage: Int) {
+		percentageLabel.text = String(min(100, max(0, percentage))) + "%"
+	}
 }
 
 extension ColorPickerThumbView {
-    
-    open func setExpanded(_ expanded: Bool, animated: Bool) {
-        let transform = expanded && expandOnTap ? CATransform3DMakeScale(expandedUpscaleRatio, expandedUpscaleRatio, 1) : CATransform3DIdentity
-        let textLabelRaiseAmount: CGFloat = expanded && expandOnTap ? (bounds.height / 2) * defaultExpandedUpscaleRatio + textLabelUpShift : (bounds.height / 2)  + textLabelUpShift
-        let labelTransform = CATransform3DMakeTranslation(0, -textLabelRaiseAmount, 0)
-        isExpanded = expanded
 
-        UIView.animate(withDuration: animated ? expansionAnimationDuration : 0, delay: expanded ? 0 : collapsingAnimationDelay, usingSpringWithDamping: expansionAnimationSpringDamping, initialSpringVelocity: 0, options: [], animations: {
-            self.borderView.layer.transform = transform
-            self.colorView.layer.transform = transform
-            self.percentageLabel.layer.transform = labelTransform
-            self.percentageLabel.alpha = expanded && self.showPercentage ? 1 : 0
-        }, completion: nil)
-    }
+	open func setExpanded(_ expanded: Bool, animated: Bool) {
+		let transform = expanded && expandOnTap ? CATransform3DMakeScale(expandedUpscaleRatio, expandedUpscaleRatio, 1) : CATransform3DIdentity
+		let textLabelRaiseAmount: CGFloat = expanded && expandOnTap ? (bounds.height / 2) * defaultExpandedUpscaleRatio + textLabelUpShift : (bounds.height / 2)  + textLabelUpShift
+		let labelTransform = CATransform3DMakeTranslation(0, -textLabelRaiseAmount, 0)
+		isExpanded = expanded
 
-    open func setDarkBorderIfNeeded(animated: Bool = true) {
-        let (_, s, b) = color.hsbColor.asTupleNoAlpha()
-        let isBorderDark = autoDarken && 1 - b < brightnessToChangeToDark && s < saturationToChangeToDark
-//        let isBorderDark = autoDarken && color.constrastRatio(with: .white) < maxContrastRatioWithWhiteToDarken
+		UIView.animate(withDuration: animated ? expansionAnimationDuration : 0, delay: expanded ? 0 : collapsingAnimationDelay, usingSpringWithDamping: expansionAnimationSpringDamping, initialSpringVelocity: 0, options: [], animations: {
+			self.borderView.layer.transform = transform
+			self.colorView.layer.transform = transform
+			self.percentageLabel.layer.transform = labelTransform
+			self.percentageLabel.alpha = expanded && self.showPercentage ? 1 : 0
+		}, completion: nil)
+	}
 
-        #if TARGET_INTERFACE_BUILDER
-            setWideBorderColors(isBorderDark) //animations do not work
-        #else
-        UIView.animate(withDuration: animated ? borderDarkeningAnimationDuration : 0) {
-            self.setWideBorderColors(isBorderDark)
-        }
-        #endif
-    }
+	open func setDarkBorderIfNeeded(animated: Bool = true) {
+		// only do something if we need to auto-darken the thumb
+		guard autoDarken else { return }
 
-    open var colorIdicatorRadius: CGFloat {
-        return bounds.width / 2 - wideBorderWidth
-    }
+		let (_, s, b) = color.hsbColor.asTupleNoAlpha()
+		let isBorderDark = autoDarken && 1 - b < brightnessToChangeToDark && s < saturationToChangeToDark
+		//        let isBorderDark = autoDarken && color.constrastRatio(with: .white) < maxContrastRatioWithWhiteToDarken
 
-    private func setWideBorderColors(_ isDark: Bool) {
-        self.borderView.viewBorderColor = isDark ? UIColor.colorPickerBorderColor : UIColor.colorPickerLightBorderColor
-        self.borderView.backgroundColor = isDark ? UIColor.colorPickerThumbViewWideBorderDarkColor : UIColor.colorPickerThumbViewWideBorderColor
-    }
+		#if TARGET_INTERFACE_BUILDER
+		setWideBorderColors(isBorderDark) //animations do not work
+		#else
+		UIView.animate(withDuration: animated ? borderDarkeningAnimationDuration : 0) {
+			self.setWideBorderColors(isBorderDark)
+		}
+		#endif
+	}
+
+	open var colorIdicatorRadius: CGFloat {
+		return bounds.width / 2 - wideBorderWidth
+	}
+
+	private func setWideBorderColors(_ isDark: Bool) {
+		self.borderView.viewBorderColor = isDark ? UIColor.colorPickerBorderColor : UIColor.colorPickerLightBorderColor
+		self.borderView.backgroundColor = isDark ? UIColor.colorPickerThumbViewWideBorderDarkColor : UIColor.colorPickerThumbViewWideBorderColor
+	}
 }
 
 extension ColorPickerThumbView {
-    open override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        guard let delegate = (borderView as? LimitedGestureCircleView)?.delegate else {
-            return !(gestureRecognizer is UIPanGestureRecognizer)
-        }
-        return delegate.gestureRecognizerShouldBegin(gestureRecognizer)
-    }
+	open override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+		guard let delegate = (borderView as? LimitedGestureCircleView)?.delegate else {
+			return !(gestureRecognizer is UIPanGestureRecognizer)
+		}
+		return delegate.gestureRecognizerShouldBegin(gestureRecognizer)
+	}
 }
